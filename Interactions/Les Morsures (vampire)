@@ -1,0 +1,196 @@
+Les Morsures (vampire)
+posté par : Nashoba
+Description:
+Dans cette ressource vous allez voir comment faire une interaction avec un joueur pour lui sucer son sang.
+
+
+En Skript:
+
+    on rightclick on entity with fist
+
+    if player is sneaking:
+
+    if clicked entity is a player:
+
+    if player's food level is smaller than 10:
+
+    if difference between {vampire.suck.%uuid of player%} is greater than 20 seconds:
+
+    if 7 is smaller than player's food level:
+
+    set {_food} to 10 - player's food
+
+    set {_food} to 3 - {_food}
+
+    set saturation of player to {_food}
+
+    set the player's food level to player's food level + 3
+
+    set clicked entity's food level to clicked entity's food level - 3
+
+    send "&aVous avez sucé le sang de %clicked entity%&r" to player
+
+    set {vampire.suck.%uuid of player%} to now
+
+    else:
+
+    send "&cVous ne pouvez sucer le sang d'un humain que toutes les 20 secondes" to player
+
+    else:
+
+    if player's food level is smaller than 10:
+
+    set the player's food level to player's food level + 1
+
+    if clicked entity's health is higher than 2:
+
+    damage the clicked entity by 2 heart
+
+    else:
+
+    clear clicked entity
+
+Voici notre première exemple en Skript, nous allons voir comment on transforme ce code en Java (Avec l'API Spigot)
+En Java:
+
+public HashMap blood = new HashMap();
+
+public HashMap bloodbug = new HashMap();
+
+  @EventHandler
+
+    public void onSuckBlood(PlayerInteractEntityEvent e) {
+
+    Player p = e.getPlayer();
+
+    if(p.isSneaking() && p.getFoodLevel()<20) {
+  
+    if(e.getHand().equals(EquipmentSlot.HAND)) {
+
+    if(p.getInventory().getItemInMainHand()==null) {
+
+    return;
+
+  }
+
+}
+
+else {
+
+    if(p.getInventory().getItemInOffHand()==null) {
+
+    return;
+
+  }
+
+}
+
+if(e.getRightClicked() instanceof Player) {
+
+  int cooldownTime =20;
+
+  if(blood.containsKey(p.getName())) {
+
+    Long bug = bloodbug.get(p.getName()); //Permet d'éviter que l'action se répète 2 fois très vite (c'est un bug présent avec Bukkit)
+
+    if(System.currentTimeMillis() - bug < 20) {
+
+    return;
+
+}
+
+long secondsLeft = ((blood.get(p.getName()) / 1000) + cooldownTime) - (System.currentTimeMillis() / 1000);
+
+  if(secondsLeft>0) {
+
+  bloodbug.put(p.getName(), System.currentTimeMillis());
+
+  int seconds = (int) secondsLeft;
+
+  p.sendMessage(ChatColor.RED + "Vous devez attendre encore " + secondsLeft + " secondes avant de réutiliser ce pouvoir!");
+
+  return;
+
+  }
+
+}
+
+blood.put(p.getName(), System.currentTimeMillis());
+
+bloodbug.put(p.getName(), System.currentTimeMillis());
+
+  if(p.getFoodLevel()> (20 - hungerSuckPlayer)) {
+
+  Integer food = 20 - p.getFoodLevel();
+
+  food = hungerSuckPlayer - food;
+
+  p.setSaturation(food);
+
+  p.setFoodLevel(20);
+
+  }
+
+else {
+
+  p.setFoodLevel(p.getFoodLevel() + hungerSuckPlayer);
+
+}
+
+if((((Player) e.getRightClicked()).getFoodLevel() - hungerSuckPlayer) < 0) {
+
+  ((Player) e.getRightClicked()).setFoodLevel(0);
+
+}
+
+else {
+
+((Player) e.getRightClicked()).setFoodLevel(((Player) e.getRightClicked()).getFoodLevel() - hungerSuckPlayer);
+
+}
+
+  blood.put(p.getName(), System.currentTimeMillis());
+
+  bloodbug.put(p.getName(), System.currentTimeMillis());
+
+  p.sendMessage(ChatColor.GREEN + "Vous avez sucé le sang de " + ((Player) e.getRightClicked()).getName());
+
+}
+
+else {
+
+  if(e.getRightClicked() instanceof LivingEntity){
+
+  LivingEntity rc = (LivingEntity) e.getRightClicked();
+
+  if(p.getFoodLevel()> (20 - hungerSuckMobs)) {
+
+  Integer food = 20 - p.getFoodLevel();
+
+  food = hungerSuckMobs - food;
+
+  p.setSaturation(food);
+
+}
+
+  p.setFoodLevel(p.getFoodLevel() + hungerSuckMobs);
+
+  if(rc.getHealth() > hungerSuckMobs) {
+
+  rc.damage(hungerSuckMobs);
+
+}
+
+else {
+
+rc.remove();
+
+        }
+
+      }
+
+    }
+
+  }
+
+}
