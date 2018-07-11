@@ -1,0 +1,46 @@
+Les Menus #2 - Interagir dans un GUI(tutoriel)
+posté par : Yoyo522
+Description:
+Dans cette ressource vous allez voir comment nous allons faire pour concevoir un Menu en Java
+
+Nous voici enfin dans la partie essentielle du site SkriptToJava, nous allons concevoir un Menu (GUI) pour votre Lobby
+ou alors un menu de selection de Teams ou de Kits.
+
+En Skript:
+
+  open chest with 6 rows named "&6Mon Coffre" to player
+  format slot 2 of player with snowball named "&9SnowBall &7&o(The Game)" to run [make player execute command "/snowball join"]
+  
+  
+  
+  
+  
+  ###############################################################################################################################
+  
+  
+  
+  
+  
+En Java:
+
+@EventHandler public void onClickChest(PlayerInteractEvent e){
+
+  Player p = e.getPlayer();
+
+  int taille = 6*9;
+
+if(e.getItem().getType() == Material.CHEST){
+
+if(e.getAction() == Action.RIGHT_CLICK_AIR){
+
+Inventory inv = Bukkit.createInventory(null, taille,ChatColor.GOLD + "Mon Coffre");
+
+ItemStack SnowBallGame = new ItemStack(Material.SNOWBALL, 1);
+ItemMeta MetaSBG = SnowBallGame.setDisplayName(SBGname)
+String SBGname = "§9SnowBall §7§o(The Game)";                //Ici l'écriture des couleurs est différente, nous allons voir par la suite comment remplacer le symbole "§" en "&" dans votre code.
+
+//Lors de l'interaction, (un clic) le joueur effectuera une commande.
+//La suite du tuto arrivera le 12/07/2018 à 17h.
+    }
+  }
+}
