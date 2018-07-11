@@ -1,0 +1,32 @@
+Les Menus #1 - Ouvrir un GUI(tutoriel)
+posté par : Yoyo522
+Description:
+Dans cette ressource vous allez voir comment nous allons faire pour concevoir un Menu en Java
+
+Nous voici enfin dans la partie essentielle du site SkriptToJava, nous allons concevoir un Menu (GUI) pour votre Lobby
+ou alors un menu de selection de Teams ou de Kits.
+
+En Skript:
+
+  open chest with 6 rows named "&6Mon Coffre" to player
+
+Voici notre première exemple en Skript, nous allons voir comment on transforme ce code en Java (Avec l'API Spigot)
+En Java:
+
+@EventHandler public void onClickChest(PlayerInteractEvent e){
+
+  Player p = e.getPlayer();
+
+  int taille = 6*9;
+
+if(e.getItem().getType() == Material.CHEST){
+
+if(e.getAction() == Action.RIGHT_CLICK_AIR){
+
+Inventory inv = Bukkit.createInventory(null, taille,ChatColor.GOLD + "Mon Coffre");
+
+    }
+  }
+}
+
+Voici le code en Java avec l'API Spigot, vous venez de completer le premier tutoriel de la catégorie ressource, vous avez le droit de vous servir de ce code
